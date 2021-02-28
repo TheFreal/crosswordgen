@@ -150,7 +150,7 @@ function PrepareBoard() {
   wordBank = [];
 
   for (var i = 0, len = wordArr.length; i < len; i++) {
-    wordBank.push(new WordObj(wordArr[i]));
+    wordBank.push(new WordObj(wordArr[i], i + 1));
   }
 
   for (i = 0; i < wordBank.length; i++) {
@@ -302,8 +302,9 @@ function AddWordToBoard() {
     var xIndex = matchData.x,
       yIndex = matchData.y;
     if (i == 0) {
-      // wordsActive[pushIndex].char[i] is the first letter of wordsActive[pushIndex].string);
-      wordsActive[pushIndex].char[i] = (curIndex + 1) + wordsActive[pushIndex].char[i]
+      console.log(wordsActive[pushIndex].char[i] + " is the first letter of word " + wordsActive[pushIndex].index + ": " + wordsActive[pushIndex].string);
+      wordsActive[pushIndex].char[i] = wordsActive[pushIndex].index + wordsActive[pushIndex].char[i]
+      // add this number to the input
     }
 
     if (matchData.dir === 0) {
@@ -353,8 +354,9 @@ function BoardCharToElement(c) {
 //   OBJECT DEFINITIONS            //
 //---------------------------------//
 
-function WordObj(stringValue) {
+function WordObj(stringValue, indexVal) {
   this.string = stringValue;
+  this.index = indexVal;
   this.char = stringValue.split("");
   this.totalMatches = 0;
   this.effectiveMatches = 0;
@@ -419,5 +421,6 @@ String.prototype.replaceAll = function (replaceThis, withThis) {
 //   INITIAL LOAD                  //
 //---------------------------------//
 
+Generate();
 Create();
-Play();
+//Play();
