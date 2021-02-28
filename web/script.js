@@ -29,9 +29,14 @@ var Bounds = {
 
 function Play() {
   var letterArr = document.getElementsByClassName('letter');
-
   for (var i = 0; i < letterArr.length; i++) {
-    letterArr[i].innerHTML = "<input class='char' type='text' maxlength='1'></input>";
+    const givenField = letterArr[i].innerHTML;
+    if (givenField.search("<sup>") > -1) {
+      // has index
+      letterArr[i].innerHTML = "<input class='char' type='text' maxlength='1'></input>" + givenField.substring(givenField.search("<sup>"), (givenField.search("</sup>") + 6));
+    } else {
+      letterArr[i].innerHTML = "<input class='char' type='text' maxlength='1'></input>";
+    }
   }
 
   mode = 0;
@@ -43,6 +48,7 @@ function Generate() {
   let length = parseInt($("#ctrl-length").val()) + 1;
   console.log("Generating " + pool + " words and selecting all shorter than " + length)
   $("#words").empty();
+  let wordCounter = 1;
   for (let i = 0; i < pool; i++) {
     fetch('/getword')
       .then(response => response.json())
@@ -50,7 +56,7 @@ function Generate() {
         if (data.word.length < length) {
           $("#words").append(`<div class="line">
       <input class="word" type="text" value="${data.word}" />
-      <input class="clue" value="${data.definition}" />
+      <input class="clue" value="${wordCounter++ + " " + data.definition}" />
     </div>`)
         }
       });
@@ -256,6 +262,7 @@ function AddWordToBoard() {
 
               if (isMatch === true) {
                 curWord.successfulMatches.push(curCross);
+
               }
             }
           }
@@ -294,14 +301,20 @@ function AddWordToBoard() {
   for (i = 0, len = wordsActive[pushIndex].char.length; i < len; i++) {
     var xIndex = matchData.x,
       yIndex = matchData.y;
+    if (i == 0) {
+      // wordsActive[pushIndex].char[i] is the first letter of wordsActive[pushIndex].string);
+      wordsActive[pushIndex].char[i] = (curIndex + 1) + wordsActive[pushIndex].char[i]
+    }
 
     if (matchData.dir === 0) {
       xIndex += i;
       board[xIndex][yIndex] = wordsActive[pushIndex].char[i];
+      //debugger;
     }
     else {
       yIndex += i;
       board[xIndex][yIndex] = wordsActive[pushIndex].char[i];
+      //debugger;
     }
 
     Bounds.Update(xIndex, yIndex);
@@ -325,7 +338,13 @@ function BoardToHtml(blank) {
 
 function BoardCharToElement(c) {
   var arr = (c) ? ['square', 'letter'] : ['square'];
-  return EleStr('div', [{ a: 'class', v: arr }], c);
+  if (!c) {
+    c = "";
+  }
+  if (c.length > 1) {
+    c = `<sup>${c.substring(0, c.length - 1)}</sup>${c.substring(c.length - 1)}`
+  }
+  return `<div class='${arr.join(" ")}'> ${(c)}</div>`
 }
 
 
