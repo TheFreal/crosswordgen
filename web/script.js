@@ -302,7 +302,7 @@ function AddWordToBoard() {
     var xIndex = matchData.x,
       yIndex = matchData.y;
     if (i == 0) {
-      console.log(wordsActive[pushIndex].char[i] + " is the first letter of word " + wordsActive[pushIndex].index + ": " + wordsActive[pushIndex].string);
+      // console.log(wordsActive[pushIndex].char[i] + " is the first letter of word " + wordsActive[pushIndex].index + ": " + wordsActive[pushIndex].string);
       wordsActive[pushIndex].char[i] = wordsActive[pushIndex].index + wordsActive[pushIndex].char[i]
       // add this number to the input
     }
